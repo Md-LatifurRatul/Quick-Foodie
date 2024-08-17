@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/presentation/screens/admin/admin_login.dart';
 import 'package:food_delivery/presentation/screens/forgot_password_page.dart';
 import 'package:food_delivery/presentation/screens/main_bottom_nav_bar.dart';
 import 'package:food_delivery/presentation/utility/constants.dart';
@@ -170,6 +171,38 @@ class _LoginPageState extends State<LoginPage> {
                       "Sign Up",
                       style:
                           TextStyle(color: Color.fromARGB(255, 236, 224, 223)),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Admin?",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 236, 224, 223),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AdminLogin()));
+                    },
+                    child: const Text(
+                      "Login Here",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 252, 248, 247),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

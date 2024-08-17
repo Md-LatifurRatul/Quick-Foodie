@@ -270,28 +270,28 @@ class _WalletPageState extends State<WalletPage> {
           if (id != null) {
             await Database.updateUserWallet(id!, add.toString());
           }
-
-          showDialog(
-            context: context,
-            builder: (_) => const AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                      ),
-                      SizedBox(width: 8),
-                      Text("Payment Sucessful")
-                    ],
-                  )
-                ],
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (_) => const AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        ),
+                        SizedBox(width: 8),
+                        Text("Payment Sucessful")
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-
+            );
+          }
           await getUserInfoWallet();
           _makePaymentIntent = null;
         },
@@ -302,18 +302,20 @@ class _WalletPageState extends State<WalletPage> {
       );
     } on StripeException catch (e) {
       print("Error is:---> $e");
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          content: const Text("Cancelled"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            content: const Text("Cancelled"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+      }
     } catch (e) {
       print('$e');
     }

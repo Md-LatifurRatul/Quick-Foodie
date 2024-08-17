@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/presentation/utility/assets_path.dart';
+import 'package:food_delivery/data/service/database.dart';
+import 'package:food_delivery/data/service/save_user_info.dart';
 import 'package:food_delivery/presentation/widgets/text_style_widget.dart';
 
 class FoodDetailsPage extends StatefulWidget {
-  const FoodDetailsPage({super.key});
+  const FoodDetailsPage(
+      {super.key,
+      required this.productImage,
+      required this.productName,
+      required this.productDetail,
+      required this.productPrice});
+
+  final String productImage;
+  final String productName;
+  final String productDetail;
+  final String productPrice;
 
   @override
   State<FoodDetailsPage> createState() => _FoodDetailsPageState();
@@ -11,6 +22,57 @@ class FoodDetailsPage extends StatefulWidget {
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
   int _countNumber = 1;
+  int totalPrice = 0;
+  String? id;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserId();
+    totalPrice = int.parse(widget.productPrice);
+  }
+
+  Future<void> _getUserId() async {
+    id = await SaveUserInfo().getUserId();
+    setState(() {});
+  }
+
+  Future<void> _addToCart() async {
+    try {
+      Map<String, dynamic> _addFoodtoCart = {
+        "Name": widget.productName,
+        "Quantity": _countNumber.toString(),
+        "Total": totalPrice.toString(),
+        "Image": widget.productImage
+      };
+      await Database.addingFoodToCart(_addFoodtoCart, id!);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.orangeAccent,
+            content: Text(
+              "Food Added to Cart",
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(
+            "Failed Adding to Cart",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +89,15 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              AssetsPath.productSalad2,
+            Image.network(
+              widget.productImage,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.35,
             ),
             const SizedBox(
-              height: 15,
+              height: 20,
             ),
             Row(
               children: [
@@ -42,12 +105,8 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Veggiterinian",
+                      widget.productName,
                       style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text(
-                      "CheackPea Salad",
-                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                   ],
                 ),
@@ -69,8 +128,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
             const SizedBox(
               height: 20,
             ),
-            Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            Text(widget.productDetail,
                 style: TextStyleWidget.smallTextStyle,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis),
@@ -80,6 +138,9 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
             Row(
               children: [
                 Text("Delivery Time", style: TextStyleWidget.semiTextSyle),
+                const SizedBox(
+                  width: 30,
+                ),
                 const Icon(
                   Icons.alarm,
                   color: Colors.black54,
@@ -107,36 +168,41 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                         style: TextStyleWidget.semiTextSyle,
                       ),
                       Text(
-                        "\$25",
+                        "\$$totalPrice",
                         style: TextStyleWidget.semiTextSyle,
                       ),
                     ],
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Text(
-                          "Add to cart",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: const Icon(
-                            Icons.shopping_cart_outlined,
-                            color: Colors.white,
+                  GestureDetector(
+                    onTap: () async {
+                      _addToCart();
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
-                        ),
-                      ],
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: const Icon(
+                              Icons.shopping_cart_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -166,12 +232,14 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   void _increaseCount() {
     _countNumber++;
+    totalPrice = totalPrice + int.parse(widget.productPrice);
     setState(() {});
   }
 
   void _decreaseCount() {
     if (_countNumber > 1) {
       _countNumber--;
+      totalPrice = totalPrice - int.parse(widget.productPrice);
     } else {
       _countNumber = 1;
     }

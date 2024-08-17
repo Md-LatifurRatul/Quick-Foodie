@@ -15,4 +15,5 @@ class AssetsPath {
   static const String showingScreen2 = "$_imagePath/screen2.png";
   static const String showingScreen3 = "$_imagePath/screen3.png";
   static const String walletImage = "$_imagePath/wallet.png";
+  static const String boy = "$_imagePath/boy.jpg";
 }

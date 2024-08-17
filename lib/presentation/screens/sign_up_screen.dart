@@ -33,9 +33,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {});
     if (_password != null) {
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: _email, password: _password ?? '');
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _email, password: _password ?? '');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -5,6 +5,7 @@ class SaveUserInfo {
   static String userNameKey = "USERNAMEKEY";
   static String userEmailKey = "USERMAILKEY";
   static String userWalletKey = "USERWALLETKEY";
+  static String userProfileKey = "USERPROFILEKEY";
 
   Future<bool> saveUserId(String getUserId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,6 +31,12 @@ class SaveUserInfo {
     return preferences.setString(userWalletKey, getUserWallet);
   }
 
+  Future<bool> saveUserProfile(String getUserProfile) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    return preferences.setString(userProfileKey, getUserProfile);
+  }
+
   Future<String?> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(userIdkey);
@@ -48,5 +55,10 @@ class SaveUserInfo {
   Future<String?> getUserWallet() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(userWalletKey);
+  }
+
+  Future<String?> getUserProfile() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(userProfileKey);
   }
 }
