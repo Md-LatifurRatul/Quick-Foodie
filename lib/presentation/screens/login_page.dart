@@ -73,147 +73,157 @@ class _LoginPageState extends State<LoginPage> {
             vertical: MediaQuery.of(context).size.height * 0.08),
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              TextFormField(
-                controller: _emailTEController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: "Email",
-                  prefixIcon: Icon(Icons.email),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: Constants.defpaultPadding),
-                child: TextFormField(
-                  obscureText: true,
-                  controller: _passwordTEController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    hintText: "Password",
-                    prefixIcon: Icon(Icons.password),
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ForgotPasswordPage()));
-                },
-                child: const Text(
-                  "Forgot Password?",
-                  style: TextStyle(color: Color.fromARGB(255, 243, 152, 145)),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.06,
-                child: ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () async {
-                          if (_formKey.currentState!.validate()) {
-                            _email = _emailTEController.text;
-
-                            _password = _passwordTEController.text;
-                            setState(() {});
-                            await _userLogin();
-                          }
-                        },
-                  child: _isLoading
-                      ? const CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        )
-                      : Text(
-                          "Login",
-                          style: TextStyleWidget.semiTextSyle,
-                        ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Don't Have Account?",
-                    style: TextStyle(color: Color.fromARGB(255, 236, 224, 223)),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUpScreen()));
-                    },
-                    child: const Text(
-                      "Sign Up",
-                      style:
-                          TextStyle(color: Color.fromARGB(255, 236, 224, 223)),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Admin?",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 236, 224, 223),
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AdminLogin()));
-                    },
-                    child: const Text(
-                      "Login Here",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 252, 248, 247),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(
-                flex: 1,
-              )
-            ],
-          ),
+          child: _buildLoginForm(context),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoginForm(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Spacer(),
+        TextFormField(
+          controller: _emailTEController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your email';
+            }
+            return null;
+          },
+          decoration: const InputDecoration(
+            hintText: "Email",
+            prefixIcon: Icon(Icons.email),
+          ),
+        ),
+        Padding(
+          padding:
+              const EdgeInsets.symmetric(vertical: Constants.defpaultPadding),
+          child: TextFormField(
+            obscureText: true,
+            controller: _passwordTEController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              hintText: "Password",
+              prefixIcon: Icon(Icons.password),
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const ForgotPasswordPage()));
+          },
+          child: const Text(
+            "Forgot Password?",
+            style: TextStyle(color: Color.fromARGB(255, 243, 152, 145)),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        _buildUserLoginSubmit(context),
+        const SizedBox(
+          height: 10,
+        ),
+        _haveAccountSignUp(context),
+        const SizedBox(
+          height: 10,
+        ),
+        _adminLoginForm(context),
+        const Spacer(
+          flex: 1,
+        )
+      ],
+    );
+  }
+
+  Widget _buildUserLoginSubmit(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.06,
+      child: ElevatedButton(
+        onPressed: _isLoading
+            ? null
+            : () async {
+                if (_formKey.currentState!.validate()) {
+                  _email = _emailTEController.text;
+
+                  _password = _passwordTEController.text;
+                  setState(() {});
+                  await _userLogin();
+                }
+              },
+        child: _isLoading
+            ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              )
+            : Text(
+                "Login",
+                style: TextStyleWidget.semiTextSyle,
+              ),
+      ),
+    );
+  }
+
+  Widget _haveAccountSignUp(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Don't Have Account?",
+          style: TextStyle(color: Color.fromARGB(255, 236, 224, 223)),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const SignUpScreen()));
+          },
+          child: const Text(
+            "Sign Up",
+            style: TextStyle(color: Color.fromARGB(255, 236, 224, 223)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _adminLoginForm(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Admin?",
+          style: TextStyle(
+              color: Color.fromARGB(255, 236, 224, 223),
+              fontSize: 15,
+              fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const AdminLogin()));
+          },
+          child: const Text(
+            "Login Here",
+            style: TextStyle(
+                color: Color.fromARGB(255, 252, 248, 247),
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 

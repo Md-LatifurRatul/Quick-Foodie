@@ -71,44 +71,7 @@ class _WalletPageState extends State<WalletPage> {
                   const SizedBox(
                     height: 15,
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF2F2F2),
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          AssetsPath.walletImage,
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.contain,
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        Column(
-                          children: [
-                            const Text(
-                              "Your Wallet",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w300),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "\$${wallet!}",
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
+                  _buildWallet(context),
                   const SizedBox(
                     height: 20,
                   ),
@@ -123,120 +86,163 @@ class _WalletPageState extends State<WalletPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _makePayment('100');
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 165, 159, 159),
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Text(
-                              "\$100",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _makePayment('500');
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 165, 159, 159),
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Text(
-                              "\$500",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _makePayment('1000');
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 165, 159, 159),
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Text(
-                              "\$1000",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _makePayment('2000');
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 165, 159, 159),
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Text(
-                              "\$2000",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  _onTapWalletMoneyAdd(),
                   const SizedBox(
                     height: 25,
                   ),
-                  InkWell(
-                    onTap: () {
-                      _addMoneyPayment();
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color(0xFF008080),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Add Money",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: GoogleFonts.poppins().toString(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
+                  _addMoneySubmitButton(context)
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _addMoneySubmitButton(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        _addMoneyPayment();
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFF008080),
+        ),
+        child: Center(
+          child: Text(
+            "Add Money",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontFamily: GoogleFonts.poppins().toString(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWallet(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        color: Color(0xFFF2F2F2),
+      ),
+      child: Row(
+        children: [
+          Image.asset(
+            AssetsPath.walletImage,
+            height: 60,
+            width: 60,
+            fit: BoxFit.contain,
+          ),
+          const SizedBox(
+            width: 40,
+          ),
+          Column(
+            children: [
+              const Text(
+                "Your Wallet",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                "\$${wallet!}",
+                style:
+                    const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _onTapWalletMoneyAdd() {
+    return Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          GestureDetector(
+            onTap: () {
+              _makePayment('100');
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(255, 165, 159, 159),
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Text(
+                "\$100",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              _makePayment('500');
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(255, 165, 159, 159),
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Text(
+                "\$500",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              _makePayment('1000');
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(255, 165, 159, 159),
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Text(
+                "\$1000",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              _makePayment('2000');
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(255, 165, 159, 159),
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Text(
+                "\$2000",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 

@@ -47,6 +47,85 @@ class _FoodOrderPageState extends State<FoodOrderPage> {
     startTime();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 50),
+        child: _buildFoodProductOrderCart(context),
+      ),
+    );
+  }
+
+  Widget _buildFoodProductOrderCart(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Material(
+          elevation: 2,
+          child: Container(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: const Center(
+              child: Text(
+                "Food Cart",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            child: _foodCartItems()),
+        const Spacer(),
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Total Price",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "\$$totalPrice",
+                style: TextStyleWidget.semiTextSyle,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        _buildProductOrderCheckout()
+      ],
+    );
+  }
+
+  Widget _buildProductOrderCheckout() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, bottom: 20, right: 8),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+          onPressed: () async {
+            int totalAmount = int.parse(userWallet!) - amount;
+            await Database.updateUserWallet(id!, totalAmount.toString());
+            await SaveUserInfo().saveUserWallet(totalAmount.toString());
+          },
+          child: const Text(
+            "CheckOut",
+            style: TextStyle(fontSize: 16, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _foodCartItems() {
     return StreamBuilder<QuerySnapshot>(
       stream: foodCartStream,
@@ -119,79 +198,6 @@ class _FoodOrderPageState extends State<FoodOrderPage> {
               )
             : const Center(child: CircularProgressIndicator());
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 50),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Material(
-              elevation: 2,
-              child: Container(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: const Center(
-                  child: Text(
-                    "Food Cart",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            SizedBox(
-                height: MediaQuery.of(context).size.height / 2,
-                child: _foodCartItems()),
-            const Spacer(),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Total Price",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "\$$totalPrice",
-                    style: TextStyleWidget.semiTextSyle,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, bottom: 20, right: 8),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                  onPressed: () async {
-                    int totalAmount = int.parse(userWallet!) - amount;
-                    await Database.updateUserWallet(
-                        id!, totalAmount.toString());
-                    await SaveUserInfo().saveUserWallet(totalAmount.toString());
-                  },
-                  child: const Text(
-                    "CheckOut",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }

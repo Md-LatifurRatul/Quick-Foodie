@@ -4,6 +4,7 @@ import 'package:food_delivery/data/service/database.dart';
 import 'package:food_delivery/data/service/save_user_info.dart';
 import 'package:food_delivery/presentation/screens/login_page.dart';
 import 'package:food_delivery/presentation/utility/assets_path.dart';
+import 'package:food_delivery/presentation/widgets/scaffold_message.dart';
 import 'package:food_delivery/presentation/widgets/text_style_widget.dart';
 import 'package:random_string/random_string.dart';
 
@@ -37,15 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             email: _email, password: _password ?? '');
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text(
-                "Registered Successfully",
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          );
+          ScaffoldMessage.showScafflodMessage(
+              context, "Registered Successfully", Colors.orangeAccent);
         }
 
         String id = randomAlpha(10);
@@ -72,32 +66,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       } on FirebaseException catch (e) {
         if (e.code == 'weak-password') {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.orangeAccent,
-                content: Text(
-                  "Password Provied is too weak",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            );
+            ScaffoldMessage.showScafflodMessage(
+                context, "Password Provied is too weak", Colors.redAccent);
           }
         } else if (e.code == 'email-already-in-use') {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.orangeAccent,
-                content: Text(
-                  "Account Already exists",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            );
+            ScaffoldMessage.showScafflodMessage(
+                context, "Account Already exists", Colors.redAccent);
           }
         }
       } finally {
         _isLoading = false;
-
         setState(() {});
       }
     }
@@ -134,181 +113,182 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     topRight: Radius.circular(40))),
             child: const Text(""),
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 60.0, left: 20.0, right: 20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Center(
-                      child: Image.asset(
-                    AssetsPath.productLogo,
-                    width: MediaQuery.of(context).size.width / 1.5,
-                    fit: BoxFit.cover,
-                  )),
-                  const SizedBox(
-                    height: 50.0,
-                  ),
-                  Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 1.7,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Form(
-                        key: _formKey,
-                        child: Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Column(
-                            children: [
-                              // const SizedBox(
-                              //   height: 10.0,
-                              // ),
-                              Text(
-                                "Sign up",
-                                style: TextStyleWidget.semiTextSyle,
-                              ),
-                              // const SizedBox(
-                              //   height: 5.0,
-                              // ),
-                              TextFormField(
-                                controller: _nameTEController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please Enter Name';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                    hintText: 'Name',
-                                    hintStyle: TextStyleWidget.semiTextSyle,
-                                    prefixIcon:
-                                        const Icon(Icons.person_outlined)),
-                              ),
-                              const SizedBox(
-                                height: 30.0,
-                              ),
-                              TextFormField(
-                                controller: _emailTEController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please Enter E-mail';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                    hintText: 'Email',
-                                    hintStyle: TextStyleWidget.semiTextSyle,
-                                    prefixIcon:
-                                        const Icon(Icons.email_outlined)),
-                              ),
-                              const SizedBox(
-                                height: 30.0,
-                              ),
-                              TextFormField(
-                                controller: _passwordTEController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please Enter Password';
-                                  }
-                                  return null;
-                                },
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                    hintText: 'Password',
-                                    hintStyle: TextStyleWidget.semiTextSyle,
-                                    prefixIcon:
-                                        const Icon(Icons.password_outlined)),
-                              ),
-                              const SizedBox(
-                                height: 40.0,
-                              ),
-                              GestureDetector(
-                                onTap: _isLoading
-                                    ? null
-                                    : () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          setState(() {
-                                            _email = _emailTEController.text;
-                                            name = _nameTEController.text;
-                                            _password =
-                                                _passwordTEController.text;
-                                          });
-                                        }
-                                        await _userRegistration();
-                                      },
-                                child: Material(
-                                  elevation: 5.0,
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0Xffff5722),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Center(
-                                      child: _isLoading
-                                          ? const CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Colors.white),
-                                            )
-                                          : const Text(
-                                              "SIGN UP",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18.0,
-                                                  fontFamily: 'Poppins1',
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 40.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Already have an account?",
-                        style: TextStyleWidget.semiTextSyle,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginPage()));
-                        },
-                        child: Text(
-                          "Login",
-                          style: TextStyleWidget.semiTextSyle,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
+          _buildSignUp(context)
         ],
       ),
+    );
+  }
+
+  Widget _buildSignUp(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 60.0, left: 20.0, right: 20.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: Image.asset(
+                AssetsPath.productLogo,
+                width: MediaQuery.of(context).size.width / 1.5,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(
+              height: 50.0,
+            ),
+            Material(
+              elevation: 5.0,
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 1.7,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: _buildSignUpFormSubmit(),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            _buildAccountLoginButton(context)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignUpFormSubmit() {
+    return Column(
+      children: [
+        Text(
+          "Sign up",
+          style: TextStyleWidget.semiTextSyle,
+        ),
+        TextFormField(
+          controller: _nameTEController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please Enter Name';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+              hintText: 'Name',
+              hintStyle: TextStyleWidget.semiTextSyle,
+              prefixIcon: const Icon(Icons.person_outlined)),
+        ),
+        const SizedBox(
+          height: 30.0,
+        ),
+        TextFormField(
+          controller: _emailTEController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please Enter E-mail';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+              hintText: 'Email',
+              hintStyle: TextStyleWidget.semiTextSyle,
+              prefixIcon: const Icon(Icons.email_outlined)),
+        ),
+        const SizedBox(
+          height: 30.0,
+        ),
+        TextFormField(
+          controller: _passwordTEController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please Enter Password';
+            }
+            return null;
+          },
+          obscureText: true,
+          decoration: InputDecoration(
+              hintText: 'Password',
+              hintStyle: TextStyleWidget.semiTextSyle,
+              prefixIcon: const Icon(Icons.password_outlined)),
+        ),
+        const SizedBox(
+          height: 40.0,
+        ),
+        _buildSignUpButton(),
+      ],
+    );
+  }
+
+  Widget _buildSignUpButton() {
+    return GestureDetector(
+      onTap: _isLoading
+          ? null
+          : () async {
+              if (_formKey.currentState!.validate()) {
+                setState(() {
+                  _email = _emailTEController.text;
+                  name = _nameTEController.text;
+                  _password = _passwordTEController.text;
+                });
+              }
+              await _userRegistration();
+            },
+      child: Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          width: 200,
+          decoration: BoxDecoration(
+              color: const Color(0Xffff5722),
+              borderRadius: BorderRadius.circular(20)),
+          child: Center(
+            child: _isLoading
+                ? const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
+                : const Text(
+                    "SIGN UP",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontFamily: 'Poppins1',
+                        fontWeight: FontWeight.bold),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAccountLoginButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Already have an account?",
+          style: TextStyleWidget.semiTextSyle,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()));
+          },
+          child: Text(
+            "Login",
+            style: TextStyleWidget.semiTextSyle,
+          ),
+        ),
+      ],
     );
   }
 

@@ -29,32 +29,6 @@ class _FoodDeliveryHomePageState extends State<FoodDeliveryHomePage> {
     _onLoadData('Pizza');
   }
 
-  Widget _allItemsData(Axis scrolAxisDirection, Axis layoutAxisDirection) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: foodItemStream,
-      builder: (context, AsyncSnapshot snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: snapshot.data.docs.length,
-                shrinkWrap: true,
-                scrollDirection: scrolAxisDirection,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot documents = snapshot.data.docs[index];
-                  return ProductItemInformation(
-                    productImagePath: documents['Image'],
-                    foodName: documents['Name'],
-                    foodInfo: documents['Detail'],
-                    foodPrice: "${documents['Price']}",
-                    layoutAxis: layoutAxisDirection,
-                  );
-                },
-              )
-            : const Center(child: CircularProgressIndicator());
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final TextTheme headLineText = Theme.of(context).textTheme;
@@ -109,6 +83,32 @@ class _FoodDeliveryHomePageState extends State<FoodDeliveryHomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _allItemsData(Axis scrolAxisDirection, Axis layoutAxisDirection) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: foodItemStream,
+      builder: (context, AsyncSnapshot snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: snapshot.data.docs.length,
+                shrinkWrap: true,
+                scrollDirection: scrolAxisDirection,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot documents = snapshot.data.docs[index];
+                  return ProductItemInformation(
+                    productImagePath: documents['Image'],
+                    foodName: documents['Name'],
+                    foodInfo: documents['Detail'],
+                    foodPrice: "${documents['Price']}",
+                    layoutAxis: layoutAxisDirection,
+                  );
+                },
+              )
+            : const Center(child: CircularProgressIndicator());
+      },
     );
   }
 

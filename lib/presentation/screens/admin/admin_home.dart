@@ -44,34 +44,38 @@ class _AdminHomeState extends State<AdminHome> {
               ),
             );
           },
-          child: Card(
-            color: Colors.black,
-            elevation: 10,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Image.asset(
-                    AssetsPath.productFood,
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(
-                  width: 30.0,
-                ),
-                const Text(
-                  "Add Food Items",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                )
-              ],
+          child: _buildProductImageCard(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductImageCard() {
+    return Card(
+      color: Colors.black,
+      elevation: 10,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Image.asset(
+              AssetsPath.productFood,
+              height: 100,
+              width: 100,
+              fit: BoxFit.cover,
             ),
           ),
-        ),
+          const SizedBox(
+            width: 30.0,
+          ),
+          const Text(
+            "Add Food Items",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold),
+          )
+        ],
       ),
     );
   }

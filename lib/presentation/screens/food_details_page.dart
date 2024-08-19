@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/data/service/database.dart';
 import 'package:food_delivery/data/service/save_user_info.dart';
+import 'package:food_delivery/presentation/widgets/scaffold_message.dart';
 import 'package:food_delivery/presentation/widgets/text_style_widget.dart';
 
 class FoodDetailsPage extends StatefulWidget {
@@ -48,29 +49,16 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       await Database.addingFoodToCart(_addFoodtoCart, id!);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.orangeAccent,
-            content: Text(
-              "Food Added to Cart",
-              style: TextStyle(fontSize: 18.0),
-            ),
-          ),
-        );
+        ScaffoldMessage.showScafflodMessage(
+            context, "Food Added to Cart", Colors.orangeAccent);
       }
     } catch (e) {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            "Failed Adding to Cart",
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      );
+
+      ScaffoldMessage.showScafflodMessage(
+          context, "Failed Adding to Cart", Colors.redAccent);
     }
   }
 
@@ -88,129 +76,145 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              widget.productImage,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.35,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.productName,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                _buildCounter(Icons.remove, _decreaseCount),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  _countNumber.toString(),
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                _buildCounter(Icons.add, _increaseCount),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(widget.productDetail,
-                style: TextStyleWidget.smallTextStyle,
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis),
-            const SizedBox(
-              height: 30,
-            ),
-            Row(
-              children: [
-                Text("Delivery Time", style: TextStyleWidget.semiTextSyle),
-                const SizedBox(
-                  width: 30,
-                ),
-                const Icon(
-                  Icons.alarm,
-                  color: Colors.black54,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "30 min",
-                  style: TextStyleWidget.semiTextSyle,
-                ),
-              ],
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
+        child: _buildProductDetails(context),
+      ),
+    );
+  }
+
+  Widget _buildProductDetails(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.network(
+          widget.productImage,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.35,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        _buildProductNameCounter(context),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(widget.productDetail,
+            style: TextStyleWidget.smallTextStyle,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis),
+        const SizedBox(
+          height: 30,
+        ),
+        _buildProductDeliveryTime(),
+        const Spacer(),
+        _buildTotalPrductAddToCart(context),
+      ],
+    );
+  }
+
+  Widget _buildTotalPrductAddToCart(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Total Price",
+                style: TextStyleWidget.semiTextSyle,
+              ),
+              Text(
+                "\$$totalPrice",
+                style: TextStyleWidget.semiTextSyle,
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () async {
+              _addToCart();
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Total Price",
-                        style: TextStyleWidget.semiTextSyle,
-                      ),
-                      Text(
-                        "\$$totalPrice",
-                        style: TextStyleWidget.semiTextSyle,
-                      ),
-                    ],
+                  const Text(
+                    "Add to cart",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      _addToCart();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          const Text(
-                            "Add to cart",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: const Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.white,
                     ),
                   ),
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductDeliveryTime() {
+    return Row(
+      children: [
+        Text("Delivery Time", style: TextStyleWidget.semiTextSyle),
+        const SizedBox(
+          width: 30,
+        ),
+        const Icon(
+          Icons.alarm,
+          color: Colors.black54,
+        ),
+        const SizedBox(
+          width: 8,
+        ),
+        Text(
+          "30 min",
+          style: TextStyleWidget.semiTextSyle,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductNameCounter(BuildContext context) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.productName,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ],
         ),
-      ),
+        const Spacer(),
+        _buildCounter(Icons.remove, _decreaseCount),
+        const SizedBox(
+          width: 20,
+        ),
+        Text(
+          _countNumber.toString(),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        _buildCounter(Icons.add, _increaseCount),
+      ],
     );
   }
 

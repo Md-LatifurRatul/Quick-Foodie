@@ -62,94 +62,7 @@ class _AdminLoginState extends State<AdminLogin> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 50.0,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                                top: 5,
-                              ),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 15.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 160, 160, 147)),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: TextFormField(
-                                  controller: _usernameTEcontroller,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please Enter Username';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Username",
-                                    hintStyle: TextStyle(
-                                      color: Color.fromARGB(255, 160, 160, 147),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30.0,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                left: 20.0,
-                                top: 5.0,
-                              ),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 160, 160, 147)),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: TextFormField(
-                                  controller: _userpasswordTEcontroller,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please Enter Password';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Password",
-                                      hintStyle: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 160, 160, 147))),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.3,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _loginAdmin();
-                                },
-                                child: const Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                        child: _buildAdminLoginForm(context),
                       ),
                     ),
                   ],
@@ -159,6 +72,90 @@ class _AdminLoginState extends State<AdminLogin> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAdminLoginForm(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 50.0,
+        ),
+        Container(
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 5,
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 15.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color.fromARGB(255, 160, 160, 147)),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: TextFormField(
+              controller: _usernameTEcontroller,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please Enter Username';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: "Username",
+                hintStyle: TextStyle(
+                  color: Color.fromARGB(255, 160, 160, 147),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 30.0,
+        ),
+        Container(
+          padding: const EdgeInsets.only(
+            left: 20.0,
+            top: 5.0,
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 20.0),
+          decoration: BoxDecoration(
+              border:
+                  Border.all(color: const Color.fromARGB(255, 160, 160, 147)),
+              borderRadius: BorderRadius.circular(10)),
+          child: Center(
+            child: TextFormField(
+              controller: _userpasswordTEcontroller,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please Enter Password';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Password",
+                  hintStyle:
+                      TextStyle(color: Color.fromARGB(255, 160, 160, 147))),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 1.3,
+          child: ElevatedButton(
+            onPressed: () {
+              _loginAdmin();
+            },
+            child: const Text(
+              "Login",
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+          ),
+        )
+      ],
     );
   }
 
